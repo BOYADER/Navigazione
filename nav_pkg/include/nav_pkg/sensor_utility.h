@@ -43,10 +43,23 @@ class USBL_sensor
         float y = eta1(1);
         float z = eta1(2);
 
-        float range = sqrt(x*x + y*y + (z-DEPTH)*(z-DEPTH));
-        float bearing = atan2(y, x);
-        float elevation = acos((z-DEPTH)/range);
+        float range;
+        float bearing;
+        float elevation;
 
+        if(x = 0 && y == 0)
+        {    
+            range = abs((z-DEPTH));
+            bearing = 0;
+            elevation = acos(abs(z-DEPTH)/range);
+        }
+
+        else
+        {
+            range = sqrt(x*x + y*y + (z-DEPTH)*(z-DEPTH));
+            bearing = atan2(y, x);
+            elevation = acos(abs(z-DEPTH)/range);
+        }
         Vector3f usbl_corr(range, bearing, elevation);
 
         return usbl_corr;
@@ -65,6 +78,10 @@ class USBL_sensor
         block_usbl(0, 2) = (z-DEPTH)/modulo;
 
         float modulo2 = sqrt(x*x + y*y);
+
+        if(modulo2 == 0)
+            modulo2 = 1*pow(10, -5); //minimum zeros
+
         block_usbl(1, 0) = -y/modulo2;
         block_usbl(1, 1) = x/modulo2;
         block_usbl(1, 2) = 0;

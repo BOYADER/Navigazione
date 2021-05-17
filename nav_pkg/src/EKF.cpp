@@ -168,7 +168,7 @@ int main(int argc, char **argv)
 
 	//Purtroppo devo caricarli dentro il main
 	x0 << eta1_0(0), eta1_0(1), eta1_0(2), 0, 0, 0, 0, 0, 0; 
-	P0 << 1, 2, 3, 4, 5, 6, 0.2, 0.4, 0.5;
+	P0 << 1, 1, 1, 2, 0.8, 1.3, 0.2, 0.4, 0.5;
 	process_noise << 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9;
 	sensor_noise << 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7;
 	
@@ -249,7 +249,7 @@ int main(int argc, char **argv)
 		Vector3f lla_test = ned2Geodetic(eta1, ned_ecef_0); //integrare in un'unica funz.
 		//cout << lla_test << endl;
 		
-		//print_info(state_corr, lla_test, ros2eigen(ahrs), P);
+		print_info(state_corr, lla_test, ros2eigen(ahrs), P);
 
 		//Publish
 		nav_pkg::Odom odom_msg;
@@ -283,7 +283,7 @@ void print_info(VectorXf state_corr, Vector3f lla, Vector3f rpy, MatrixXf P_corr
 	ROS_INFO("p:%f q:%f r:%f\n", state_corr(6), state_corr(7), state_corr(8));
 
 	ROS_INFO("Covarianza: \n");
-	cout << P_corr << endl;
+	cout << clear_small_number(P_corr) << endl;
 }
 
 geometry_msgs::Vector3 eigen2ros(Vector3f v)

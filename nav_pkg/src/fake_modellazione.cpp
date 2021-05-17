@@ -42,22 +42,22 @@ int main(int argc, char **argv)
 		
 		nav_pkg::ahrs ahrs_msg;
 	
-		ahrs_msg.rpy.x=1;	
-		ahrs_msg.rpy.y=2;
-		ahrs_msg.rpy.z=3;
+		ahrs_msg.rpy.x=0;	
+		ahrs_msg.rpy.y=0;
+		ahrs_msg.rpy.z=0;
 		
 		ahrs_msg.counter= ros::Time::now().toSec();
 
 		nav_pkg::usbl usbl_msg;
 		
-		usbl_msg.pos.x= 45; //range
+		usbl_msg.pos.x= 50; //range
 		usbl_msg.pos.y= 0; //bearing
 		usbl_msg.pos.z= M_PI/2; //elevation
 		usbl_msg.counter=ros::Time::now().toSec();
 
 		nav_pkg::depth depth_msg;
 
-		depth_msg.z=5; //10 * sin(ros::Time::now().toSec());
+		depth_msg.z=0; //10 * sin(ros::Time::now().toSec());
 		depth_msg.counter=ros::Time::now().toSec();
 
 		nav_pkg::dvl dvl_msg;

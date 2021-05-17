@@ -17,7 +17,7 @@ using namespace Eigen;
 /*------------CUSTOM FUNCTION DECLARATION------------*/
 //clear matrix 
 float tolerance = 1*pow(10, -5);
-MatrixXf clear_small_number(MatrixXf matrix, float tol);
+MatrixXf clear_small_number(MatrixXf matrix);
 
 //Jacobian and Skew Symmetrix matrix function
 Matrix3f Jacobian_RPY(Vector3f rpy);
@@ -29,13 +29,13 @@ MatrixXf vileMatriceD(Vector3f ni1, Vector3f rpy);
 MatrixXf vileMatriceH(Vector3f eta1, Vector3f ni1, Vector3f ni2);
 
 /*----------FUNCTION--------*/
-MatrixXf clear_small_number(MatrixXf matrix, float tol)
+MatrixXf clear_small_number(MatrixXf matrix)
 {
 	for(int i=0; i < matrix.rows(); i++)
 	{
 		for(int j=0; j < matrix.cols(); j++)
 		{
-			if(matrix(i, j) < tol)
+			if(matrix(i, j) < tolerance)
 			matrix(i, j)=0;
 		}
 
@@ -157,13 +157,17 @@ MatrixXf vileMatriceH(Vector3f eta1, Vector3f ni1, Vector3f ni2)
 	float y = eta1(1);
 	float z = eta1(2);
 
-	Matrix3f block_usbl;
+	 Matrix3f block_usbl;
 	float modulo = sqrt(x*x + y*y + (z-DEPTH)*(z-DEPTH));
 	block_usbl(0, 0) = x/modulo;
 	block_usbl(0, 1) = y/modulo;
 	block_usbl(0, 2) = (z-DEPTH)/modulo;
 
 	float modulo2 = sqrt(x*x + y*y);
+
+	if(modulo2 == 0)
+		modulo2 = 1*pow(10, -5); //minimum zeros
+
 	block_usbl(1, 0) = -y/modulo2;
 	block_usbl(1, 1) = x/modulo2;
 	block_usbl(1, 2) = 0;
