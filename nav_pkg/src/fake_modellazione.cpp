@@ -9,7 +9,7 @@
 #include <nav_pkg/geolib.h>
 
 float time_step = 0.1;
-float i=0;
+int i=0;
 
 int main(int argc, char **argv)
 {
@@ -66,9 +66,9 @@ int main(int argc, char **argv)
 		gps_msg.lla.x=45.110735; //[DEG]
 		gps_msg.lla.y=7.640827;  //[DEG]
 		gps_msg.lla.z=0; //[m]
-		gps_msg.counter= i; //ros::Time::now().toSec();
+		gps_msg.counter= (float) i; //ros::Time::now().toSec();
 		
-		if(gps_msg.counter > 30)
+		if(gps_msg.counter > 60)
 		{
 			gps_msg.under_water = 1;
 			ROS_WARN("Sott'acqua!\n");
@@ -78,7 +78,10 @@ int main(int argc, char **argv)
 
 		pub_ahrs.publish(ahrs_msg);
 		pub_usbl.publish(usbl_msg);
-		pub_depth.publish(depth_msg);
+	
+		if(i%2 == 0)
+			pub_depth.publish(depth_msg);
+
 		pub_dvl.publish(dvl_msg);
 		pub_gps.publish(gps_msg);
 

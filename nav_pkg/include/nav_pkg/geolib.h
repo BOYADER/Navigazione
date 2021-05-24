@@ -7,13 +7,10 @@
 using namespace std;
 using namespace Eigen;
 
-
 		/*_______________________________________________*/
 		/*_______________ FUNCTIONS DECL. _______________*/
-
 float rad2Deg(float);
 float deg2Rad(float);
-
 
 		/*_______________________________________________*/
 		/*_______________ FUNCTIONS' BODY _______________*/
@@ -74,5 +71,4 @@ float deg2Rad(float degrees)
 {
     return (degrees / 180.0) * M_PI;
 }
-
 

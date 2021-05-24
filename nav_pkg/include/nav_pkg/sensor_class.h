@@ -128,6 +128,7 @@ class Usbl:public Sensor
     {
         set_pbody(0, 0, DEPTH);
     }
+
     //ridefinizione delle funzioni
     Vector3f function(Vector3f pos, Vector3f rpy)
     {

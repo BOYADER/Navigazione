@@ -73,7 +73,15 @@ int main(int argc, char **argv)
 		loop_rate.sleep();
 
        	ROS_WARN("Test\n");
-		cout << ahrs_obj.get_isNew() << "\n" << endl;
+		cout << usbl_obj.get_Rsb() << endl;
+		cout << usbl_obj.get_pbody() << endl;
+		cout << dvl_obj.get_Rsb() << endl;
+		cout << dvl_obj.get_pbody() << endl;
+		cout << depth_obj.get_Rsb() << endl;
+		cout << depth_obj.get_pbody() << endl;
+		cout << ahrs_obj.get_Rsb() << endl;
+		cout << ahrs_obj.get_pbody() << endl;
+		/*cout << ahrs_obj.get_isNew() << "\n" << endl;
 		cout << usbl_obj.get_isNew() << "\n" << endl;
 		cout << dvl_obj.get_isNew() << "\n" << endl;
 		cout << depth_obj.get_isNew() << "\n" << endl;
@@ -82,7 +90,7 @@ int main(int argc, char **argv)
 		ahrs_obj.set_isOld();
 		usbl_obj.set_isOld();
 		dvl_obj.set_isOld();
-		depth_obj.set_isOld();
+		depth_obj.set_isOld();*/
 	}
 
 return 0;

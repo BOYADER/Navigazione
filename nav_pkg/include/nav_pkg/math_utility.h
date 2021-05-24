@@ -8,14 +8,13 @@ using namespace Eigen;
 
 /*------------PARAMETERS DEFINITIONS------------*/
 #define T 0.1
-
+float tolerance = 1*pow(10, -5);
 
 /*------------CUSTOM FUNCTION DECLARATION------------*/
-//clear matrix 
-float tolerance = 1*pow(10, -5);
 MatrixXf clear_small_number(MatrixXf matrix);
 geometry_msgs::Vector3 eigen2ros(Vector3f v);
 Vector3f ros2eigen(geometry_msgs::Vector3 v_msg);
+
 //Jacobian and Skew Symmetrix matrix function
 Matrix3f Jacobian_RPY(Vector3f rpy);
 Matrix3f Jacobian_RPY(float phi, float theta, float psi);
@@ -24,7 +23,6 @@ Matrix3f SS(Vector3f v);
 //Linearization Matrix
 MatrixXf vileMatriceF(Vector3f rpy, Vector3f ni1);
 MatrixXf vileMatriceD();
-MatrixXf vileMatriceM(Vector3f p_dvl);
 
 /*----------FUNCTION--------*/
 MatrixXf clear_small_number(MatrixXf matrix)

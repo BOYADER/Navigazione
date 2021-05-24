@@ -14,17 +14,28 @@ using namespace std;
 using namespace Eigen;
 
 /*------------PARAMETERS DEFINITIONS------------*/
-//#define T 0.1
-#define LAT_0 45.110735 //latitudine orig. {NED} 
-#define LONG_0 7.640827 //longitudine orig. {NED}
-#define ALT_0 0			//altitudine orig. {NED}
-#define n 9 //num. state variable
-#define N_init 10 //num variabili di init
+//dimension State Space
+#define n 9
 
-Vector3f ned_lla_0(LAT_0, LONG_0, ALT_0);
+//Init Waypoint
+float LAT_0;	//[deg]
+float LONG_0;	//[deg]
+float ALT_0;	//[m]
+
+int N_init;		//n° misure per init
+
+//Deviaz. Standard dei Sensori
+float dev_gps;	//[m]
+float dev_r;	//[m]
+float dev_be;	//[deg]
+float dev_rp;	//[deg]
+float dev_y;	//[deg]
+float dev_z;	//[m]
+float dev_gyro;	//[rad/s]
 
 /*------------CUSTOM FUNCTION DECLARATION------------*/
-void print_info(VectorXf state_corr, Vector3f lla, Vector3f rpy, MatrixXf P_corr);
+void print_info(VectorXf state_corr, Vector3f lla, MatrixXf P_corr);
+void param_Init(ros::NodeHandle node_obj);
 
 /*SENSOR OBJECTS*/
 Sensor gyro_obj; //nota: spiegare perche' Sensor e non Gyro::Sensor
@@ -104,6 +115,11 @@ int main(int argc, char **argv)
 	ros::Subscriber sub_gps=node_obj.subscribe("/gps", 1, gps_callback);
 	ros::Rate loop_rate(1/T);	//10 Hz Prediction step
 
+	//Carico i parametri da mission.yaml
+	param_Init(node_obj);
+
+	Vector3f ned_lla_0(LAT_0, LONG_0, ALT_0);
+
 	//init useful tool
 	static int isInit = 0;
 	int streak = 0;
@@ -112,28 +128,23 @@ int main(int argc, char **argv)
 	Vector3f ni1;
 	Vector3f eta2;
 
-
-	ROS_INFO("Initialization\n");
+	ROS_WARN("Initialization");
 	while (isInit == 0) 
 	{
 		loop_rate.sleep();
 		ros::spinOnce();
 
-		ROS_WARN("Test Init: Id: %f, IsNew?: %d", gps_obj.get_id(), gps_obj.get_isNew());
+		ROS_INFO("Init: Id: %f, IsNew: %d", gps_obj.get_id(), gps_obj.get_isNew());
 
-		if (( gps_obj.get_isNew())&&(!gps_obj.get_underWater()))
-		{
+		bool valid_meas = gps_obj.get_isNew() && !gps_obj.get_underWater() && ahrs_obj.get_isNew() && dvl_obj.get_isNew() && depth_obj.get_isNew();
+
+		if (valid_meas)
 			++streak;
-		}
 
 		else if ((gps_obj.get_isNew())&&(gps_obj.get_underWater()))
-		{
 			streak = 0;
-		}
 
-		//ROS_INFO("n. Misure: %d\n", streak);
-
-		if ( streak>=N_init )
+		if (streak >= N_init)
 		{
 			eta1 << lla2ned(ros2eigen(gps_obj.get_data()), ned_lla_0);
 			eta1(2) = depth_obj.get_data();
@@ -148,13 +159,16 @@ int main(int argc, char **argv)
 		}
 
 		gps_obj.set_isOld();
+		dvl_obj.set_isOld();
+		depth_obj.set_isOld();
+		ahrs_obj.set_isOld();
 	}
 
 	VectorXf process_noise(n);
 	VectorXf sensor_noise(13);
 	VectorXf P0(n);
 
-	P0 << 1, 1, 1, 0.4, 0.5, 0.6, pow(deg2Rad(0.03),2),  pow(deg2Rad(0.03),2), deg2Rad(1); //da mettere incertezza di GPS, DVL e AHRS
+	P0 << pow(dev_gps, 2), pow(dev_gps, 2), pow(dev_z, 2), 0.4, 0.5, 0.6, pow(deg2Rad(dev_rp),2),  pow(deg2Rad(dev_rp),2), pow(deg2Rad(dev_y), 2); 
 	process_noise << 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9; //da definire	
 
 	MatrixXf P = P0.asDiagonal(); //Covariance
@@ -195,7 +209,7 @@ int main(int argc, char **argv)
 		
 		if (gps_obj.get_underWater())
 		{
-			sensor_noise << pow(0.01, 2), pow(deg2Rad(0.1), 2), pow(deg2Rad(0.1), 2), 0.4, 0.5, 0.6, 4*pow(10, -6), pow(deg2Rad(0.03),2),  pow(deg2Rad(0.03),2), deg2Rad(1), 0.1, 0.1, 0.1;
+			sensor_noise << pow(dev_r, 2), pow(deg2Rad(dev_be), 2), pow(deg2Rad(dev_be), 2), 0.4, 0.5, 0.6, pow(dev_z, 2), pow(deg2Rad(dev_rp),2),  pow(deg2Rad(dev_rp),2), deg2Rad(dev_y), pow(dev_gyro,2), pow(dev_gyro,2), pow(dev_gyro,2);
 
 			if(usbl_obj.get_isNew())
 			{
@@ -222,7 +236,7 @@ int main(int argc, char **argv)
 
 		else 
 		{
-			sensor_noise << 1, 1, 1, 0.4, 0.5, 0.6, 4*pow(10, -6), pow(deg2Rad(0.03),2),  pow(deg2Rad(0.03),2), deg2Rad(1), 0.1, 0.1, 0.1;
+			sensor_noise << pow(dev_gps, 2), pow(dev_gps, 2), pow(dev_gps, 2), 0.4, 0.5, 0.6, pow(dev_z, 2), pow(deg2Rad(dev_rp),2),  pow(deg2Rad(dev_rp),2), deg2Rad(dev_y), pow(dev_gyro,2), pow(dev_gyro,2), pow(dev_gyro,2);
 
 			if(gps_obj.get_isNew())
 			{
@@ -315,8 +329,9 @@ int main(int argc, char **argv)
 		MatrixXf R = sensor_noise.asDiagonal(); //Sensor Noise Cov.
 
 		int p= measures.size();
-		/*ROS_INFO("Dimensione delle misure: %d\n", p);
-		ROS_WARN("Misure\n");
+		//ROS_INFO("Dimensione delle misure: %d\n", p);
+
+		/*ROS_WARN("Misure\n");
 		cout << measures  << "\n" << endl;
 		ROS_WARN("h(x, 0)\n");
 		cout << sensor_function  << "\n" << endl;*/
@@ -333,7 +348,6 @@ int main(int argc, char **argv)
 		/*cout << S << "\n" << endl;
 		cout << S.inverse() << "\n" << endl;
 		cout << S.completeOrthogonalDecomposition().pseudoInverse() << endl;*/
-
 
 		VectorXf state_corr = state_pred + L*e;
 		//cout << L << endl;
@@ -352,7 +366,7 @@ int main(int argc, char **argv)
 		Vector3f lld_test = ned2lla(eta1, ned_lla_0);
 		Vector3f lld(lld_test(0), lld_test(1), eta1(2));
 
-		print_info(state_corr, lld, eta2, P);
+		//print_info(state_corr, lld, P);
 
 		//Publish
 		nav_pkg::Odom odom_msg;
@@ -368,7 +382,7 @@ int main(int argc, char **argv)
 return 0;
 }
 
-void print_info(VectorXf state_corr, Vector3f lla, Vector3f rpy, MatrixXf P_corr)
+void print_info(VectorXf state_corr, Vector3f lla, MatrixXf P_corr)
 {
 	ROS_WARN("|********EKF RESULT*********|\n");
 
@@ -380,12 +394,26 @@ void print_info(VectorXf state_corr, Vector3f lla, Vector3f rpy, MatrixXf P_corr
 	ROS_INFO("u:%f v:%f w:%f\n", state_corr(3), state_corr(4), state_corr(5));
 
 	ROS_INFO("RPY ANGLES:\n");
-	ROS_INFO("roll:%f pitch:%f yaw:%f\n", rpy(0), rpy(1), rpy(2));
-
-	ROS_INFO("Velocita' Angolare {BODY}\n");
-	ROS_INFO("p:%f q:%f r:%f\n", state_corr(6), state_corr(7), state_corr(8));
+	ROS_INFO("roll:%f pitch:%f yaw:%f\n", state_corr(6), state_corr(7), state_corr(8));
 
 	ROS_INFO("Covarianza: \n");
 	cout << clear_small_number(P_corr) << endl;
 }
 
+void param_Init(ros::NodeHandle node_obj)
+{
+	//Carico i parametri da mission.yaml
+	node_obj.getParam("/initial_pose/position/latitude", LAT_0);
+	node_obj.getParam("/initial_pose/position/longitude", LONG_0);
+	node_obj.getParam("/initial_pose/position/depth", ALT_0);
+
+	node_obj.getParam("/N_init", N_init);
+
+	node_obj.getParam("/sensor_dev/gps", dev_gps);
+	node_obj.getParam("/sensor_dev/usbl/range", dev_r);
+	node_obj.getParam("/sensor_dev/usbl/b_e", dev_be);
+	node_obj.getParam("/sensor_dev/depth", dev_z);
+	node_obj.getParam("/sensor_dev/ahrs/r_p", dev_rp);
+	node_obj.getParam("/sensor_dev/ahrs/yaw", dev_y);
+	node_obj.getParam("/sensor_dev/gyro", dev_gyro);
+}
