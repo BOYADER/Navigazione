@@ -12,7 +12,6 @@ find_package(catkin REQUIRED COMPONENTS
 # Generate messages in the 'msg' folder
  add_message_files(
   FILES
-   imu.msg
    dvl.msg
    usbl.msg
    ahrs.msg
@@ -46,3 +45,7 @@ target_link_libraries(EKF ${catkin_LIBRARIES})
 add_executable(fake_modellazione src/fake_modellazione.cpp)
 add_dependencies(fake_modellazione nav_pkg_generate_messages_cpp)
 target_link_libraries(fake_modellazione ${catkin_LIBRARIES})
+
+add_executable(prova src/prova.cpp)
+add_dependencies(prova nav_pkg_generate_messages_cpp)
+target_link_libraries(prova ${catkin_LIBRARIES})
