@@ -42,6 +42,10 @@ add_executable(EKF src/EKF.cpp)
 add_dependencies(EKF nav_pkg_generate_messages_cpp)
 target_link_libraries(EKF ${catkin_LIBRARIES})
 
+add_executable(PF src/PF.cpp)
+add_dependencies(PF nav_pkg_generate_messages_cpp)
+target_link_libraries(PF ${catkin_LIBRARIES})
+
 add_executable(fake_modellazione src/fake_modellazione.cpp)
 add_dependencies(fake_modellazione nav_pkg_generate_messages_cpp)
 target_link_libraries(fake_modellazione ${catkin_LIBRARIES})

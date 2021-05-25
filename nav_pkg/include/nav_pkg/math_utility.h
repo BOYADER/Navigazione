@@ -1,5 +1,4 @@
 /*----------------MATH UTILITY----------------*/
-#include <ostream>
 #include <iostream>
 #include <eigen/Eigen/Eigen>
 

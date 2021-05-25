@@ -1,0 +1,10 @@
+<launch>
+
+<!-- Caricoo i waypoints di mission.yaml-->
+<rosparam file = "$(find nav_pkg)/config/mission.yaml"/>
+
+<!-- Simula il blocco di modellazione. -->
+<node name="fake_modellazione" pkg="nav_pkg" type="fake_modellazione" output="screen" />
+<!--Filtro di Kalman Esteso per la Navigazione. -->
+<node name="PF" pkg ="nav_pkg" type="PF" output="screen" />
+</launch>

@@ -10,6 +10,8 @@
 #include <nav_pkg/sensor_class.h>
 #include <nav_pkg/geolib.h>
 
+#include <nav_pkg/eigenmvn.h>
+
 using namespace std;
 using namespace Eigen;
 
@@ -19,6 +21,8 @@ Depth depth_obj;
 Usbl usbl_obj;
 Dvl dvl_obj;
 Ahrs ahrs_obj;
+
+int N = 1000;
 
 /*------------CALLBACK FUNCTIONS------------*/
 
@@ -73,24 +77,16 @@ int main(int argc, char **argv)
 		loop_rate.sleep();
 
        	ROS_WARN("Test\n");
-		cout << usbl_obj.get_Rsb() << endl;
-		cout << usbl_obj.get_pbody() << endl;
-		cout << dvl_obj.get_Rsb() << endl;
-		cout << dvl_obj.get_pbody() << endl;
-		cout << depth_obj.get_Rsb() << endl;
-		cout << depth_obj.get_pbody() << endl;
-		cout << ahrs_obj.get_Rsb() << endl;
-		cout << ahrs_obj.get_pbody() << endl;
-		/*cout << ahrs_obj.get_isNew() << "\n" << endl;
-		cout << usbl_obj.get_isNew() << "\n" << endl;
-		cout << dvl_obj.get_isNew() << "\n" << endl;
-		cout << depth_obj.get_isNew() << "\n" << endl;
 
+		VectorXf mean = VectorXf::Zero(9); 
+		EigenMultivariateNormal<float> normX_solver(mean, MatrixXf::Identity(9, 9));
+
+		MatrixXf test = normX_solver.samples(N); //9xN
 
 		ahrs_obj.set_isOld();
 		usbl_obj.set_isOld();
 		dvl_obj.set_isOld();
-		depth_obj.set_isOld();*/
+		depth_obj.set_isOld();
 	}
 
 return 0;
