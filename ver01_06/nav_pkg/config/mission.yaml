@@ -1,0 +1,65 @@
+initial_pose:
+  orientation: 
+    pitch: 0.0              #[rad]
+    roll: 0.0               #[rad]
+    yaw: 0.0                #[rad]
+  position: 
+    latitude: 45.110735     #[°]
+    longitude: 7.640827     #[°]
+    depth: 0.0              #[m]
+  
+waypoint_list: 
+  wp1:
+    latitude: 45.109306     #[°]
+    longitude: 7.640577     #[°]
+    depth: 10.0             #[m]
+  wp2:
+    latitude: 45.109874     #[°]
+    longitude: 7.640883     #[°]
+    depth: 20.0             #[m]
+  wp3:
+    latitude: 45.109340     #[°]
+    longitude: 7.641342     #[°]
+    depth: 20.0             #[m]
+  wp4:
+    latitude: 45.109874     #[°]
+    longitude: 7.641696     #[°]
+    depth: 20.0             #[m]
+  wp5:
+    latitude: 45.109357     #[°]
+    longitude: 7.642082     #[°]
+    depth: 0.0              #[m]
+
+tolerance_on_waypoint: 10   #[m] 
+
+N_init: 10                  #n° misure per init
+N_particles: 1000            #n° particelle
+
+Tuning_Q:
+  eta1:
+    x: 0.2                       #[m]
+    y: 0.001                   #[m]
+    z: 0.001                   #[m]
+  ni1:
+    u: 0.0001                       #[m/s]
+    v: 0.00001                  #[m/s]
+    w: 0.0001                   #[m/s]
+  eta2:
+    r: 0.0005                   #[rad]
+    p: 0.0005                   #[rad]
+    y: 5                        #[rad]
+
+sensor_dev:
+    gps: 1                  #[m]
+    usbl:
+      range: 0.01           #[m]
+      b_e: 0.1              #[deg]  
+    dvl: 0.01               #[%] su vel. 
+    depth: 0.002            #[m]
+    ahrs:
+      r_p: 0.03            #[deg]
+      yaw: 1               #[deg]
+    gyro: 0.01              #[rad/s]
+
+
+      
