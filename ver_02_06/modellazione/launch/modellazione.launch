@@ -1,0 +1,14 @@
+<launch>
+	<rosparam file = "$(find modellazione)/config/mission.yaml"/>
+	<rosparam file = "$(find modellazione)/config/constant.yaml"/>
+	
+	<node name ="model" pkg="modellazione" type="model"/>
+	<node name="ahrs" 	pkg="modellazione" type="ahrs_sensor"/>
+	<node name="depth" 	pkg="modellazione" type="depth_sensor"/>
+	<node name="gps" 	pkg="modellazione" type="gps_sensor"/>
+	<node name="usbl"	pkg="modellazione" type="usbl_sensor"/>
+	<node name="dvl" 	pkg="modellazione" type="dvl_sensor"/>
+	<node name="control" pkg="modellazione" type="fake_control"/>
+	<node name="nav" 	pkg="modellazione" type="fake_nav"/>
+
+</launch>
