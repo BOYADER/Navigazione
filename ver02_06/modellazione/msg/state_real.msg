@@ -1,6 +1,0 @@
-geometry_msgs/Vector3 eta_1
-geometry_msgs/Vector3 eta_2
-geometry_msgs/Vector3 ni_1
-geometry_msgs/Vector3 ni_2
-geometry_msgs/Vector3 eta_1_dot_dot
-float64 prova
