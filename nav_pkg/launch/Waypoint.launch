@@ -1,0 +1,5 @@
+<!--File launch del blocco modellazione-->
+<launch>
+<include file="$(find pc_wp)/launch/control_int.launch"/>
+<include file="$(find nav_pkg)/launch/KalNav_int.launch"/>
+</launch>

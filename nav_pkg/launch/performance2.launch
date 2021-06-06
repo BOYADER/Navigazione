@@ -1,0 +1,13 @@
+<launch>
+<!-- Carico i waypoints di mission.yaml-->
+<rosparam file = "$(find nav_pkg)/config/mission.yaml"/>
+<!--Filtro di Kalman Esteso per la Navigazione. -->
+<node name="EKF" pkg ="nav_pkg" type="EKF" output="screen"/>
+
+<!-- Performance Analysis-->
+<node name="performance_analysis" pkg ="nav_pkg" type="performance_analysis"/> 
+<node name="rpy_plot" pkg="rqt_plot" type="rqt_plot" args="/error/rpy"/>
+<node name="pos_plot" pkg="rqt_plot" type="rqt_plot" args="/error/pos"/>
+<node name="vel_plot" pkg="rqt_plot" type="rqt_plot" args="/error/lin_vel"/>
+<node name="MSE_plot" pkg="rqt_plot" type="rqt_plot" args="/error/MSE"/>
+</launch>

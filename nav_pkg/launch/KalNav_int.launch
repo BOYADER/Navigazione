@@ -1,0 +1,9 @@
+<launch>
+
+<!-- Carico i waypoints di mission.yaml-->
+<rosparam file = "$(find nav_pkg)/config/mission.yaml"/>
+<!--Filtro di Kalman Esteso per la Navigazione. -->
+<node name="EKF" pkg ="nav_pkg" type="EKF"/>
+<!--File launch del blocco modellazione-->
+<include file="$(find modellazione)/launch/integrazione.launch"/>
+</launch>
