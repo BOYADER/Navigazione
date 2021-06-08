@@ -39,8 +39,9 @@ void state_callback(const modellazione::state_real::ConstPtr& msg)
 
 void odom_callback(const nav_pkg::Odom::ConstPtr& msg)
 {
-    //eta1_cap = eigen2ros(lla2ned(ros2eigen(msg->lld), ned_lla_0));
-    eta1_cap = msg->lld;
+    eta1_cap = eigen2ros(lla2ned(ros2eigen(msg->lld), ned_lla_0));
+    eta1_cap.z = msg->lld.z;
+    //eta1_cap = msg->lld;
     ni1_cap = msg->lin_vel;
     eta2_cap = msg->rpy;
     /*ROS_INFO("Stato stimato\n");

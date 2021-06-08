@@ -129,7 +129,6 @@ int main(int argc, char **argv)
 	ros::Subscriber sub_depth=node_obj.subscribe("/sensor/depth", 1, depth_callback);
 	ros::Subscriber sub_gps=node_obj.subscribe("/sensor/gps", 1, gps_callback);
 	ros::Rate loop_rate(10);	//10 Hz Prediction step
-	//ros::Publisher pub_err = node_obj.advertise<geometry_msgs::Vector3>("/innovazione", 10);
 
 	//Carico i parametri da mission.yaml
 	param_Init(node_obj);
@@ -433,6 +432,16 @@ int main(int argc, char **argv)
 		eta1 << state_corr(0), state_corr(1), state_corr(2);
 		ni1 << state_corr(3), state_corr(4), state_corr(5);
 		eta2 << state_corr(6), state_corr(7), state_corr(8);
+
+		//wrap to pi eta2
+		/*if(abs(eta2(2)) > M_PI + 0.5)
+		{
+			for(int j=0; j < 3; j++)
+			{
+				eta2(j) = atan2(sin(eta2(j)), cos(eta2(j)));
+			}
+		}*/
+
 
 		Vector3f lld_test = ned2lla(eta1, ned_lla_0);
 		Vector3f lld(lld_test(0), lld_test(1), eta1(2));

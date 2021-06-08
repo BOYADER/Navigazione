@@ -4,10 +4,11 @@
 <rosparam file = "$(find nav_pkg)/config/mission.yaml"/>
 <!--Filtro di Kalman Esteso per la Navigazione. -->
 <include file="$(find pc_wp)/launch/test.launch"/>
-<node name="EKF" pkg ="nav_pkg" type="EKF" output="screen"/>
+<node name="EKF" pkg ="nav_pkg" type="EKF"/>
 
 <node name="pos_plot" pkg="rqt_plot" type="rqt_plot" args="/state_real/eta_1 /odom_1/lld"/>
 <node name="vel_plot" pkg="rqt_plot" type="rqt_plot" args="/state_real/ni_1 /odom_1/lin_vel"/>
 <node name="rpy_plot" pkg="rqt_plot" type="rqt_plot" args="/state_real/eta_2 /odom_1/rpy"/>
+<node name="torque_plot" pkg="rqt_plot" type="rqt_plot" args="rqt_plot /tau/tau/force /tau/tau/torque"/>
 
 </launch>

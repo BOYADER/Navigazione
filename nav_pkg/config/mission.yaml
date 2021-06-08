@@ -41,13 +41,13 @@ Tuning_Q:
     y: 0.005                    #[m/s]
     z: 0.001                    #[m/s]
   ni1:
-    u: 0.01                   #[m/s^2]
-    v: 0.005                   #[m/s^2] #vedi qua
-    w: 0.01                   #[m/s^2]
+    u: 0.045                   #[m/s^2]
+    v: 0.015                   #[m/s^2] #vedi qua
+    w: 0.05                   #[m/s^2]
   eta2:
-    r: 0.01                   #[rad/s]
-    p: 0.01                   #[rad/s]
-    y: 0.05                    #[rad/s] #vedi qua
+    r: 0.05                    #[rad/s]
+    p: 0.01                     #[rad/s]
+    y: 0.5                      #[rad/s] #vedi qua
   ni2:                          #Per Particle Filter
     p: 0.01                     #[rad/s^2]
     q: 0.01                     #[rad/s^2]
