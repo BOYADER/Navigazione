@@ -1,2 +1,3 @@
-# Navigazione
-Inserire la cartella Eigen dentro Include.
+# Navigazione Waypoint: Guida al codice
+
+roslaunch pc_wp launch.launch
