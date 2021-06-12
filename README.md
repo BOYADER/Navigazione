@@ -105,3 +105,5 @@ pc_wp, è necessario modificare nel file _EKF.cpp_ (riga 113) il nome del topic 
 precedenti, questi 2 files launch eseguono una simulazione senza il blocco di
 controllo. Non è necessario in questo caso cambiare il nome del topic.
 
+3. `pf.launch`:Esegue _fake_modellazione.cpp_ e _PF.cpp_.
+
