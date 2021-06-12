@@ -60,7 +60,7 @@ calcola l’errore sulle variabili cinematiche ed infine l’MSE ad ogni iterazi
 
 3. **fake_modellazione.cpp**: Nodo di testing. Simula il blocco modellazione con dei dati costanti e senza rumore. 
 
-4. **PF.cpp**: Nodo _incompleto_ che realizza un Filtro a Particelle con lo stesso scopo di _EKF.cpp_ .
+4. **PF.cpp**: Nodo _incompleto_ che realizza un Filtro a Particelle con lo stesso scopo di _EKF.cpp_ . Il nodo presenza un'istruzione `break` che interrompe il nodo alla prima iterazione del ciclo `while(ros::ok())`.
 
 ## 5) File YAML
 L’unico file YAML nel pkg si chiama `mission.yaml` e si trova al path:
@@ -74,7 +74,7 @@ modello.
 - Valori delle deviazioni standard relative al rumore di misura dei sensori
 utilizzati.
 - N° di misure valide necessarie per l’inizializzazione.
-- 
+
 Il file inoltre contiene anche alcuni parametri aggiuntivi, necessari allo sviluppo del
 Filtro a Particelle. (Numero di particelle e dev. std. sulla variabile di stato della vel. angolare).
 
