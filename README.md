@@ -48,6 +48,17 @@ E' possibile plottare:
 
 ## 4) Nodi
 
+1. **EKF.cpp**: Nodo che sottoscrive i topics _/sensor_, esegue l’algoritmo
+dell’Extended Kalman Filter e pubblica la stima dello stato nel topic _/odom_. In
+realtà il nodo pubblica un altro topic, _/pos_ned_, utile solo per confrontare la
+posizione del blocco di modellazione e la stima della posizione con _rqt_plot_.
+
+2. **performance_analysis.cpp**: Nodo che sottoscrive i topics _/odom_ e _/state_real_,
+calcola l’errore sulle variabili cinematiche ed infine l’MSE ad ogni iterazione.
+
+3. **fake_modellazione.cpp**: Nodo di testing. Simula il blocco modellazione con dei dati costanti e senza rumore. 
+
+4. **PF.cpp**: Nodo _incompleto_ che realizza un Filtro a Particelle con lo stesso scopo di _EKF.cpp_ .
 
 ## 5) Building Your Nodes
 
