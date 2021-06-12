@@ -44,6 +44,8 @@ E' possibile plottare:
 
 ## 3) Struttura del pkg di Navigazione
 
+![alt text](nav_pkg_screen.png)
+
 
 
 ## 4) Intellisense
