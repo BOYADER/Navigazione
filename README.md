@@ -6,7 +6,7 @@ La missione consiste nel raggiungere dei waypoints di cui le coordinate (Lat. Lo
 * [1. Requisiti](#1-requisiti)
 * [2. Simulazione](#2-simulazione)
 * [3. Struttura del pkg](#3-struttura-del-pkg-di-navigazione)
-* [4. Nodi](#3-intellisense)
+* [4. Nodi](#4-nodi)
 * [5. File YAML](#4-building-your-nodes)
 * [6. Files launch](#5-debugging-your-nodes)
 
@@ -43,91 +43,13 @@ E' possibile plottare:
 - Errore quadratico Medio (MSE) calcolato iterativamente al variare del tempo.
 
 ## 3) Struttura del pkg di Navigazione
-Il package è organizzato quanto segue. 
+
 ![alt text](/nav_pkg_screen.PNG)
 
+## 4) Nodi
 
 
-
-
-
-## 4) Intellisense
-
-To add intellisense support for ROS nodes we need to provide a c_cpp_properties.json in our .vscode folder.
-This is used by the C/C++ Extension to search for all the include folders that are referenced by the node.
-
-c_cpp_properties.json
-```
-{
-    "configurations": [
-        {
-            "name": "Linux",
-            "browse": {
-                "databaseFilename": "",
-                "limitSymbolsToIncludedHeaders": true
-            },
-            "includePath": [
-                "${workspaceFolder}/devel/include",
-                "/opt/ros/kinetic/include",
-                "/usr/include/**",
-                "${workspaceFolder}/**"
-            ],
-            "intelliSenseMode": "gcc-x64",
-            "compilerPath": "/usr/bin/g++",
-            "cStandard": "c11",
-            "cppStandard": "c++17"
-        }
-    ],
-    "version": 4
-}
-```
-
-The most import option is the `includePath`.
-It points the intellisense tools to the right folders.
-The first line is the path to the catkin devel includes, that include generated headers for your .srv and .msg files.
-You can access them with `#include  "<pacakgeName>/<msg_srv_name>.h` in your nodes.
-The second include is the path to the ros headers (ros.h etc.).
-The last line is a recursive pattern that VS Code unterstands.
-It starts at your workspace root folder and then works down to every folder in your workspace folder.
- In the global management environment it's the ~/catkin_ws folder. 
- In the multi-root environment it's the ROS package root folder you added as a folder to your workspace.
-
-In a typical package folder structure like in the image below you can include your package headers from `<pacakgeName>/include/<packagename>/<name>.h` with a `#include <packageName>/<name>.h` to your node.
-
-Keep in mind that this is only for intellisense. 
-If you set up your build configuration correctly, your packages would still build fine when using catkin_make, regardless of what is configured in this file.
-
-![alt_text](docs/FolderStructure.png)
-
-
-If you're on a Mac you might want to use clang:
-```
-{
-    "configurations": [
-        {
-            "name": "Mac",
-            "includePath": [
-                "${workspaceFolder}//devel/include",
-                "/opt/ros/kinetic/include",
-                "/usr/include/**",
-                "${workspaceFolder}/**"
-            ],
-            "intelliSenseMode": "clang-x64",
-            "compilerPath": "/usr/bin/clang++",
-            "cStandard": "c11",
-            "cppStandard": "c++17",
-            "compileCommands": "${workspaceFolder}/build/compile_commands.json"
-        }
-    ],
-    "version": 4
-}
-```
-
-
-You can also combine both in the same file, and select your environment.
-Check out the documentation for more info on that.
-
-## 4) Building Your Nodes
+## 5) Building Your Nodes
 
 You should now have a VS Code workspace set up in your catkin workspace root.
 To build the ROS nodes we need to add a build task configuration.
