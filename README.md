@@ -42,6 +42,8 @@ E' possibile plottare:
 - Errore sulle singole grandezze.
 - Errore quadratico Medio (MSE) calcolato iterativamente al variare del tempo.
 
+![alt text](/rqt_graph.PNG)
+
 ## 3) Struttura del pkg di Navigazione
 
 ![alt text](/nav_pkg_screen.PNG)
