@@ -80,4 +80,28 @@ Filtro a Particelle. (Numero di particelle e dev. std. sulla variabile di stato 
 
 
 ## 6) Files launch
+Sono state fatte numerose prove per l’integrazione (intermedia e finale), dunque
+sono presenti vari file launch.
+Per lanciare uno di questi launch, sul terminale basta digitare:
+
+```
+   roslaunch nav_pkg <nome_file>.launch
+```  
+
+1. `debug2.launch` e `performance2.launch`: Esegue una simulazione
+in cui il blocco di controllo retroaziona _/state_real_, lasciando in catena aperta
+il filtro. Questo permette di vedere gli ordini di grandezza delle velocità e
+accelerazioni richieste dal blocco di Pianificazione e Controllo. Questo è stato
+pensato per poter fare un tuning del filtro, evitando che l’azione di controllo
+risenta delle inevitabili oscillazioni della stima. I due launch si differenziano da
+ciò che mandano ai nodi rqt_plot. Il primo mostra infatti negli stessi grafici la
+stima e lo stato vero del sistema. Il secondo invece grafica gli errori sulle
+singole variabili di stato e l’MSE al variare del tempo.
+Per eseguire ciò, vista l’esistenza di un blocco che pubblica /odom nel pkg
+pc_wp, è necessario modificare nel file _EKF.cpp_ (riga 113) il nome del topic in
+“`/odom_1`”.
+     
+2. `debug.launch` e `performance.launch`: Analogamente a quelli
+precedenti, questi 2 files launch eseguono una simulazione senza il blocco di
+controllo. Non è necessario in questo caso cambiare il nome del topic.
 
