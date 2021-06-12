@@ -43,9 +43,11 @@ E' possibile plottare:
 - Errore quadratico Medio (MSE) calcolato iterativamente al variare del tempo.
 
 ## 3) Struttura del pkg di Navigazione
-
+Il package è organizzato quanto segue. 
 ![alt text](/nav_pkg_screen.PNG)
-)
+
+
+
 
 
 
