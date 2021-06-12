@@ -63,6 +63,21 @@ calcola l’errore sulle variabili cinematiche ed infine l’MSE ad ogni iterazi
 4. **PF.cpp**: Nodo _incompleto_ che realizza un Filtro a Particelle con lo stesso scopo di _EKF.cpp_ .
 
 ## 5) File YAML
+L’unico file YAML nel pkg si chiama `mission.yaml` e si trova al path:
+`~/nav_pkg/config/mission.yaml` .
+
+Il file contiene:
+- Le coordinate geografiche della posa iniziale e dei waypoints da raggiungere
+in missione.
+- Valori delle deviazioni standard relative al disturbo di processo supposto nel
+modello.
+- Valori delle deviazioni standard relative al rumore di misura dei sensori
+utilizzati.
+- N° di misure valide necessarie per l’inizializzazione.
+- 
+Il file inoltre contiene anche alcuni parametri aggiuntivi, necessari allo sviluppo del
+Filtro a Particelle. (Numero di particelle e dev. std. sulla variabile di stato della vel. angolare).
+
 
 ## 6) Files launch
 
