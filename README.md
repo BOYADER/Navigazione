@@ -1,4 +1,6 @@
 # Navigazione Waypoint: Guida al codice
+**Realizzato da: Andrea Battistoni, Daniele Caradonna, Gianpaolo Lantermo.**
+
 Implementazione di un Filtro di Kalman Esteso per la stima dello stato di un AUV.
 La missione consiste nel raggiungere dei waypoints di cui le coordinate (Lat. Long. e Prof.) sono espresse nel file `mission.yaml`.
 
