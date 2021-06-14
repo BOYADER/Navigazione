@@ -56,6 +56,11 @@ VectorXf prediction_particles(VectorXf state, VectorXf dist_proc);
 void print_info(VectorXf state_corr, Vector3f lla, MatrixXf P_corr);
 void param_Init(ros::NodeHandle node_obj);
 
+Vector3f sin_eigen(Vector3f v);
+Vector3f cos_eigen(Vector3f v);
+Vector3f atan2_eigen(Vector3f v1, Vector3f v2);
+Vector3f abs_eigen(Vector3f v);
+
 /*SENSOR OBJECTS*/
 Sensor gyro_obj; //nota: spiegare perche' Sensor e non Gyro::Sensor
 Depth depth_obj;
@@ -229,37 +234,45 @@ int main(int argc, char **argv)
 			particles.col(i) = prediction_particles(particles.col(i), w_real.col(i));
 		}
 
-		/*MatrixXf eta1_particle(3, N_p);
-		MatrixXf eta2_particle(3, N_p);
-		eta1_particle = particles.block(0, 0, 3, N_p);
-		eta2_particle = particles.block(6, 0, 3, N_p);
-
-		MatrixXf ni1_particle(3, N_p);
-		MatrixXf ni2_particle(3, N_p);
-		ni1_particle = particles.block(3, 0, 3, N_p);
-		ni2_particle = particles.block(9, 0, 3, N_p);*/
-
 		//calcolo della media campionaria
 		VectorXf state_pred(n);
 		state_pred.setZero();
-
-		//TO DO: MEDIA ANGOLI
 
 		for( i =0; i < N_p; i++)
 		{
 			state_pred  += pesi(i) * particles.col(i);
 		}
 
+		Vector3f mean_sin(0, 0, 0);
+		Vector3f mean_cos(0, 0, 0);
+
+		state_pred.block(6, 0, 3, 1).setZero(); //sovrascrivo il blocco sugli angoli
+
+		for( i =0; i < N_p; i++)
+		{
+			mean_sin += pesi(i)*sin_eigen(particles.col(i).block(6, 0, 3, 1));
+			mean_cos += pesi(i)*cos_eigen(particles.col(i).block(6, 0, 3, 1));
+		}
+
+		state_pred.block(6, 0, 3, 1) = atan2_eigen(mean_sin, mean_cos);
+
 		for( i =0; i < N_p; i++)
 		{
 			VectorXf scarto = particles.col(i) - state_pred;
+
+			//wrap to pi
+			for(int j=6; j < 9; j++)
+			{
+				scarto(j) = atan2(sin(scarto(j)), cos(scarto(j)));
+			}
+
 			P  += pesi(i) * scarto * scarto.transpose();
 		}
 
 		/*ROS_WARN("Stato predetto:");
 		cout << state_pred << "\n" << endl;
 		ROS_WARN("Matrice di Covarianza:");
-		cout << P << "\n" << endl;*/
+		cout << clear_small_number(P) << "\n" << endl;*/
 
 		MatrixXf eta1_particle(3, N_p);
 		MatrixXf eta2_particle(3, N_p);
@@ -277,11 +290,11 @@ int main(int argc, char **argv)
 		ni2 << state_pred(9), state_pred(10), state_pred(11);
 
 		Vector3f bias_std(0.01, 0.01, 0.01);
-		Vector3f dev_dvl = dvl_perc*ni1 + bias_std;
+		Vector3f dev_dvl = dvl_perc*abs_eigen(ni1) + bias_std;
 
 		sensor_noise(3) = powf(dev_dvl(0), 2.0);
 		sensor_noise(4) = powf(dev_dvl(1), 2.0);
-		sensor_noise(5) = powf(dev_dvl(2), 2.0);		
+		sensor_noise(5) = powf(dev_dvl(2), 2.0);	
 
 		/*CORREZIONE*/
 		MatrixXf R = sensor_noise.asDiagonal(); //Sensor Noise Cov.
@@ -426,8 +439,6 @@ int main(int argc, char **argv)
 			pesi(i) = likelyhood(error_particles.col(i), R);
 		}
 
-		//cout << pesi << endl;
-
 		break;
 
 		//Publish
@@ -479,7 +490,7 @@ VectorXf prediction_particles(VectorXf state, VectorXf dist_proc)
 
 void print_info(VectorXf state_corr, Vector3f lla, MatrixXf P_corr)
 {
-	ROS_INFO("|********EKF RESULT*********|\n");
+	ROS_INFO("|********PF RESULT*********|\n");
 
 	ROS_INFO("Posizione: {NED} \n");
 	ROS_INFO("x:%f y:%f z:%f\n", state_corr(0), state_corr(1), state_corr(2));
@@ -536,3 +547,56 @@ void param_Init(ros::NodeHandle node_obj)
 	node_obj.getParam("/sensor_dev/ahrs/yaw", dev_y);
 	node_obj.getParam("/sensor_dev/gyro", dev_gyro);
 }
+
+Vector3f sin_eigen(Vector3f v)
+{
+	Vector3f sin_v(0, 0, 0);
+
+	//sin of a vector3D
+	for(int k=0; k < 3; k++)
+	{
+		sin_v(k) = sin(v(k));
+	}
+
+	return sin_v;
+}
+
+Vector3f cos_eigen(Vector3f v)
+{
+	Vector3f cos_v(0, 0, 0);
+
+	//sin of a vector3D
+	for(int k=0; k < 3; k++)
+	{
+		cos_v(k) = cos(v(k));
+	}
+
+	return cos_v;
+}
+
+Vector3f atan2_eigen(Vector3f v1, Vector3f v2)
+{
+	Vector3f atan2_v(0, 0, 0);
+
+	//sin of a vector3D
+	for(int k=0; k < 3; k++)
+	{
+		atan2_v(k) = atan2(v1(k), v2(k));
+	}
+
+	return atan2_v;
+}
+
+Vector3f abs_eigen(Vector3f v)
+{
+	Vector3f abs_v(0, 0, 0);
+
+	//sin of a vector3D
+	for(int k=0; k < 3; k++)
+	{
+		abs_v(k) = abs(v(k));
+	}
+
+	return abs_v;
+}
+
